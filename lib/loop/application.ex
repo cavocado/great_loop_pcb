@@ -8,8 +8,6 @@ defmodule Loop.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      Loop.Repo,
       # Start the Telemetry supervisor
       LoopWeb.Telemetry,
       # Start the PubSub system
