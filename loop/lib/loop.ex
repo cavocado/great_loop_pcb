@@ -26,6 +26,7 @@ defmodule Loop do
     57,
     58,
     59,
+    52,
     53,
     54,
     60,
@@ -74,9 +75,8 @@ defmodule Loop do
 
   # Turns all the LEDs on
   def on(spi, brightness) do
-    SPI.transfer(spi, <<0b01000000>>)
-    SPI.transfer(spi, <<0xC0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF>>)
-    SPI.transfer(spi, get_brightness(brightness))
+    list = for i <- 1..63, do: i
+    turn_on(spi, list, brightness, [0, 0, 0, 0, 0, 0, 0, 0])
   end
 
   # Turns one LED off and on at the given rate for the given number of times
