@@ -16,7 +16,7 @@ defmodule LoopWeb.MainLive.Index do
        leds: 0,
        on: [],
        places: Loop.Location.list(),
-       blink: false,
+       blink: "solid",
        tps: 2,
        times: 4
      })}
@@ -63,7 +63,7 @@ defmodule LoopWeb.MainLive.Index do
 
     <Form for={:blink} opts={autocomplete: "on"} submit="blink">
       <Field name="blink">
-      <Label text="Blink?"/>
+      <Label text="Blink, Solid, or Route?"/>
       <div class="control">
         <TextInput value={@blink}/>
       </div>
@@ -111,10 +111,14 @@ defmodule LoopWeb.MainLive.Index do
       ) do
     led_list = Loop.get_list(leds) |> Enum.sort()
 
-    if bl do
+    if bl == "blink" do
       Loop.blink(s, led_list, b, tps, t)
     else
-      Loop.turn_on(s, led_list, b, [0, 0, 0, 0, 0, 0, 0, 0])
+      if bl == "route" do
+        Loop.route(led_list, s, b)
+      else
+        Loop.turn_on(s, led_list, b, [0, 0, 0, 0, 0, 0, 0, 0])
+      end
     end
 
     {:noreply, assign(socket, on: led_list)}
@@ -131,14 +135,7 @@ defmodule LoopWeb.MainLive.Index do
         %{"blink" => %{"blink" => bl, "tps" => tps, "times" => times}},
         socket
       ) do
-    blink =
-      if bl == "true" do
-        true
-      else
-        false
-      end
-
     {:noreply,
-     assign(socket, blink: blink, tps: String.to_integer(tps), times: String.to_integer(times))}
+     assign(socket, blink: bl, tps: String.to_integer(tps), times: String.to_integer(times))}
   end
 end

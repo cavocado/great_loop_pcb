@@ -62,7 +62,7 @@ defmodule Loop do
 
   def route([first | rest], spi, brightness) do
     turn_on(spi, first, brightness, [])
-    Process.sleep(1000)
+    Process.sleep(100)
     route(rest, spi, brightness)
   end
 
