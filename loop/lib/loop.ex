@@ -109,33 +109,14 @@ defmodule Loop do
   end
 
   def turn_on(spi, [num | rest], brightness, grid_list) do
-    grid = div(num - 1, 8) + 1
+    grid = div(num - 1, 8)
 
     section =
       (rem(num - 1, 8) + 1)
       |> get_value()
 
-    new_grid_list = List.update_at(grid_list, grid - 1, fn x -> x + section end)
+    new_grid_list = List.update_at(grid_list, grid, fn x -> x + section end)
     turn_on(spi, rest, brightness, new_grid_list)
-  end
-
-  def get_list(%{"led" => string}) do
-    String.split(string)
-    |> Enum.map(fn x -> String.to_integer(x) end)
-  end
-
-  def make_string([]) do
-    "none"
-  end
-
-  def make_string(["all"]) do
-    "all"
-  end
-
-  def make_string([first | rest]) do
-    Enum.reduce(rest, Integer.to_string(first), fn x, acc ->
-      acc <> ", " <> Integer.to_string(x)
-    end)
   end
 
   # Gets the binary representation of the LED

@@ -106,10 +106,10 @@ defmodule LoopWeb.MainLive.Index do
   @impl true
   def handle_event(
         "led",
-        %{"leds" => leds},
+        %{"leds" => %{"led" => leds}},
         %{assigns: %{spi: s, brightness: b, blink: bl, tps: tps, times: t}} = socket
       ) do
-    led_list = Loop.get_list(leds) |> Enum.sort()
+    led_list = get_list(leds) |> Enum.sort()
 
     if bl == "blink" do
       Loop.blink(s, led_list, b, tps, t)
@@ -137,5 +137,11 @@ defmodule LoopWeb.MainLive.Index do
       ) do
     {:noreply,
      assign(socket, blink: bl, tps: String.to_integer(tps), times: String.to_integer(times))}
+  end
+
+  # probably a function for this already
+  defp get_list(string) do
+    String.split(string)
+    |> Enum.map(fn x -> String.to_integer(x) end)
   end
 end
