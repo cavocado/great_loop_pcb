@@ -1,6 +1,13 @@
 # The Great Loop PCB
 
-This is a project designed to provide a user-friendly interface for controlling LEDs on a custom PCB, showcasing the Great Loop.
+In 2022, our friends Bruce and Maggie decided to drive their boat around the
+[Great Loop](https://www.greatloop.org/) and visit us along the way. They
+documented their journey at [Currently The
+Boat](https://www.currentlytheboat.com/). Since it was going to take them 6
+months to reach us, it seemed like plenty of time to design a custom PCB with
+LEDs to show their route. Since Bruce is a big fan of Elixir, the project is
+controlled by a Raspberry Pi running Nerves with an Elixir LiveView user
+interface.
 
 ![PCB](pictures/loop_pcb.jpeg)
 
