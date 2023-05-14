@@ -16,7 +16,7 @@ interface.
 This is an Elixir project that uses the following:
 
 * [Nerves](https://nerves-project.org/)
-* [Phoenix LiveView](https://phoenix-framework.org/)
+* [Phoenix LiveView](https://www.phoenixframework.org/)
 * [Surface](https://surface-ui.org/)
 * [Circuits.SPI](https://elixir-circuits.github.io/)
 
