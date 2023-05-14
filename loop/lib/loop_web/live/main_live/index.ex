@@ -13,9 +13,9 @@ defmodule LoopWeb.MainLive.Index do
      assign(socket, %{
        spi: spi,
        brightness: "1/16",
-       leds: 0,
+       leds: "",
        on: [],
-       places: Loop.Location.list(),
+       places: Loop.Location.make_list(),
        blink: "solid",
        tps: 2,
        times: 4
@@ -41,47 +41,131 @@ defmodule LoopWeb.MainLive.Index do
     <Button action="off" label="All Off" id="off"/>
     <Button action="loop" label="Loop" id="loop"/>
 
-    <Form for={:leds} opts={autocomplete: "on"} submit="led">
-      <Field name="led">
-        <Label text="LEDs"/>
-        <div class="control">
-          <TextInput value={@leds}/>
-        </div>
-      </Field>
-      <Submit label="Submit"/>
-    </Form>
+        <Form for={:leds} opts={autocomplete: "on"} submit="led">
+          <Field name="led">
+            <Label text="LEDs"/>
+            <div class="control">
+              <TextInput value={@leds}/>
+            </div>
+          </Field>
+          <Submit label="Submit"/>
+        </Form>
 
-    <Form for={:brightness} opts={autocomplete: "on"} submit="bright">
-      <Field name="brightness">
-        <Label text="Brightness"/>
-        <div class="control">
-          <TextInput value={@brightness}/>
-        </div>
-      </Field>
-      <Submit label="Submit"/>
-    </Form>
+        <Form for={:brightness} opts={autocomplete: "on"} submit="bright">
+          <Field name="brightness">
+            <Label text="Brightness"/>
+            <div class="control">
+              <TextInput value={@brightness}/>
+            </div>
+          </Field>
+          <Submit label="Submit"/>
+        </Form>
 
-    <Form for={:blink} opts={autocomplete: "on"} submit="blink">
-      <Field name="blink">
-      <Label text="Blink, Solid, or Route?"/>
-      <div class="control">
-        <TextInput value={@blink}/>
-      </div>
-      </Field>
-      <Field name="tps">
-      <Label text="Times Per Second"/>
-      <div class="control">
-        <TextInput value={@tps}/>
-      </div>
-      </Field>
-      <Field name="times">
-      <Label text="Number of Times"/>
-      <div class="control">
-        <TextInput value={@times}/>
-      </div>
-      </Field>
-      <Submit label="Submit"/>
-    </Form>
+        <Form for={:blink} opts={autocomplete: "on"} submit="blink">
+          <Field name="blink">
+          <Label text="Blink, Solid, or Route?"/>
+          <div class="control">
+            <TextInput value={@blink}/>
+          </div>
+          </Field>
+          <Field name="tps">
+          <Label text="Times Per Second"/>
+          <div class="control">
+            <TextInput value={@tps}/>
+          </div>
+          </Field>
+          <Field name="times">
+          <Label text="Number of Times"/>
+          <div class="control">
+            <TextInput value={@times}/>
+          </div>
+          </Field>
+          <Submit label="Submit"/>
+        </Form>
+
+
+        <b>Place Names (in path order; counterclockwise)</b>
+        <p>
+        Middle (Chattanooga Section):
+        Grand Rivers,
+        Chattanooga,
+        Huntsville,
+        Fulton,
+        Columbus,
+        Demopolis
+        </p>
+        <p>
+        South:
+        New Orleans,
+        Gulfport,
+        Pensacola,
+        Miramar Beach,
+        Apalachicola,
+        Clearwater,
+        Cape Coral,
+        Marco Island,
+        Key West,
+        Miami,
+        Lake Okeechobee,
+        West Palm Beach,
+        New Smyrna Beach,
+        St. Augustine,
+        Fernandina Beach
+        </p>
+        <p>
+        East:
+        Albany,
+        New York City,
+        Atlantic City,
+        Cape May,
+        Annapolis,
+        Deltaville,
+        Norfolk,
+        Dismal Swamp,
+        Morehead City,
+        Wilmington,
+        Myrtle Beach,
+        Charleston,
+        Savannah
+        </p>
+        <p>
+        North (US path):
+        Syracuse,
+        Rochester,
+        Buffalo,
+        Cleveland,
+        Toledo,
+        Detroit,
+        Port Hope,
+        Alpena
+        </p>
+        <p>
+        North (Canada path):
+        Fort Edward,
+        Burlington,
+        Montreal,
+        Ottawa,
+        Kingston,
+        Peterborough,
+        Britt,
+        Drummond
+        </p>
+        <p>
+        West:
+        Mackinaw City,
+        Petoskey,
+        Manistee,
+        Grand Haven,
+        Chicago,
+        Hennepin,
+        Peoria,
+        St. Louis,
+        Cape Girardeau,
+        Memphis,
+        Greenville,
+        Vicksburg,
+        Baton Rouge
+        </p>
     """
   end
 
@@ -104,23 +188,23 @@ defmodule LoopWeb.MainLive.Index do
   end
 
   @impl true
-  def handle_event(
-        "led",
-        %{"leds" => %{"led" => leds}},
-        %{assigns: %{spi: s, brightness: b, blink: bl, tps: tps, times: t}} = socket
-      ) do
-    led_list = get_list(leds) |> Enum.sort()
+  def handle_event("led", %{"leds" => %{"led" => leds}}, %{assigns: %{spi: s, brightness: b, blink: "blink", tps: tps, times: t}} = socket) do
+    led_list = Loop.Location.get_list(leds) |> Enum.sort()
+    Loop.blink(s, led_list, b, tps, t)
+    {:noreply, assign(socket, on: led_list)}
+  end
 
-    if bl == "blink" do
-      Loop.blink(s, led_list, b, tps, t)
-    else
-      if bl == "route" do
-        Loop.route(led_list, s, b)
-      else
-        Loop.turn_on(s, led_list, b, [0, 0, 0, 0, 0, 0, 0, 0])
-      end
-    end
+  @impl true
+  def handle_event("led", %{"leds" => %{"led" => leds}}, %{assigns: %{spi: s, brightness: b, blink: "route"}} = socket) do
+    led_list = Loop.Location.get_list(leds)
+    Loop.route(led_list, s, b)
+    {:noreply, assign(socket, on: led_list)}
+  end
 
+  @impl true
+  def handle_event("led", %{"leds" => %{"led" => leds}}, %{assigns: %{spi: s, brightness: b}} = socket) do
+    led_list = Loop.Location.get_list(leds)
+    Loop.turn_on(s, led_list, b, [0, 0, 0, 0, 0, 0, 0, 0])
     {:noreply, assign(socket, on: led_list)}
   end
 
@@ -137,11 +221,5 @@ defmodule LoopWeb.MainLive.Index do
       ) do
     {:noreply,
      assign(socket, blink: bl, tps: String.to_integer(tps), times: String.to_integer(times))}
-  end
-
-  # probably a function for this already
-  defp get_list(string) do
-    String.split(string)
-    |> Enum.map(fn x -> String.to_integer(x) end)
   end
 end
