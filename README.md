@@ -36,7 +36,7 @@ mix firmware.gen.script
 
 ## Using
 
-Visit http://your_device_name.local/main to access the controls for the board. 
+Visit http://your_device_name.local/main to access the controls for the board.
 
 ![UI 1](pictures/ui_1.png)
 
@@ -47,6 +47,16 @@ Below the display, there are forms and buttons to turn LEDs on and off, make the
 The names of the LEDs are located at the bottom of the page.
 
 ![UI 3](pictures/ui_3.png)
+
+## Hardware
+
+We used [EasyEDA](https://easyeda.com/) for creating the schematics and ordered
+boards through [JLCPCB](https://jlcpcb.com/). We also had JLCPCB do the
+assembly. You can view a [pdf of the schematics](schematic_great_loop.pdf) or
+look at its [OSHWLab project](https://oshwlab.com/fhunleth/binary_clock2_copy).
+
+![Front](pictures/3d-front.png)
+![Back](pictures/3d-back.png)
 
 ## License
 
