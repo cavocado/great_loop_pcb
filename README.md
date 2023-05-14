@@ -11,6 +11,19 @@ interface.
 
 ![PCB](pictures/loop_pcb.jpeg)
 
+## Software overview
+
+This is an Elixir project that uses the following:
+
+* [Nerves](https://nerves-project.org/)
+* [Phoenix LiveView](https://phoenix-framework.org/)
+* [Surface](https://surface-ui.org/)
+* [Circuits.SPI](https://elixir-circuits.github.io/)
+
+The Raspberry Pi runs a Nerves project that starts Phoenix. We used Surface for
+the user interface. Circuits.SPI was used to communicate with the LED driver
+chip, the [TM1640](hw/TM1640.pdf).
+
 ## Building
 
 ```sh
@@ -59,7 +72,7 @@ The names of the LEDs are located at the bottom of the page.
 
 We used [EasyEDA](https://easyeda.com/) for creating the schematics and ordered
 boards through [JLCPCB](https://jlcpcb.com/). We also had JLCPCB do the
-assembly. You can view a [pdf of the schematics](schematic_great_loop.pdf) or
+assembly. You can view a [pdf of the schematics](hw/schematic_great_loop.pdf) or
 look at its [OSHWLab project](https://oshwlab.com/fhunleth/binary_clock2_copy).
 
 ![Front](pictures/3d-front.png)
