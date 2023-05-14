@@ -1,6 +1,6 @@
 # LoopFw
 
-**TODO: Add description**
+This is the Nerves firmware project for the loop project.
 
 ## Targets
 
